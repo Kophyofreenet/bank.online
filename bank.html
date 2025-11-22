@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Copy Account Number</title>
+  <style>
+    :root{
+      --bg: #0a1a3a;
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --accent: #4dabf7;
+      --muted: #a5d8ff;
+      --text: #ffffff;
+      --border: rgba(255, 255, 255, 0.3);
+      --snow-bg: linear-gradient(180deg, #0a1a3a 0%, #1a3a5f 100%);
+    }
+    
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      overflow: hidden;
+    }
+    
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--snow-bg);
+      position: relative;
+      color: var(--text);
+      padding: 0 16px;
+    }
+    
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 2px solid var(--border);
+      padding: 24px;
+      max-width: 380px;
+      width: 100%;
+      z-index: 10;
+      position: relative;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .bank {
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .bank h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    
+    .account {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid var(--border);
+    }
+    
+    .meta {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .owner {
+      font-weight: 700; /* เพิ่มความหนา */
+      color: var(--text);
+      font-size: 16px; /* เพิ่มขนาดฟอนต์ */
+      margin-bottom: 8px; /* เพิ่มระยะห่างด้านล่าง */
+    }
+    
+    .number {
+      font-family: monospace;
+      font-size: 18px;
+      letter-spacing: 2px;
+      color: var(--text);
+    }
+    
+    .btn {
+      background: var(--accent);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 0;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    
+    .btn:hover {
+      background: #339af0;
+      transform: translateY(-2px);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+    
+    .toast {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 28px;
+      background: var(--accent);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(77, 171, 247, 0.4);
+      display: none;
+      z-index: 100;
+      max-width: 300px;
+      width: 90%;
+    }
+    
+    .copy-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .copy-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .bank-logo {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    
+    .bank-logo img {
+      width: 220px;
+      height: auto;
+      border-radius: 12px;
+      object-fit: contain;
+      border: 1px solid var(--border);
+    }
+    
+    /* Snow effect styles */
+    .snowflake {
+      position: absolute;
+      top: -10px;
+      color: white;
+      font-size: 1em;
+      user-select: none;
+      pointer-events: none;
+      z-index: 1;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    
+    @keyframes fall {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(100vh) translateX(20px) rotate(360deg);
+        opacity: 0.2;
+      }
+    }
+    
+    /* Additional winter background elements */
+    .mountain {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 150px;
+      background: linear-gradient(to top, #1a3a5f, #2a4a7f);
+      clip-path: polygon(0% 100%, 10% 70%, 20% 90%, 30% 60%, 40% 80%, 50% 50%, 60% 70%, 70% 40%, 80% 60%, 90% 30%, 100% 100%);
+      z-index: 2;
+    }
+    
+    .mountain-back {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(to top, #0f2a4f, #1a3a5f);
+      clip-path: polygon(0% 100%, 15% 80%, 30% 95%, 45% 65%, 60% 85%, 75% 55%, 90% 75%, 100% 100%);
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Winter background elements -->
+  <div class="mountain-back"></div>
+  <div class="mountain"></div>
+  
+  <!-- Snow container -->
+  <div id="snow-container"></div>
+  
+  <div class="card" role="region" aria-label="Copy Account Number">
+    <div class="bank-logo">
+      <img src="bank icon ထည့်ရမည်နေရာ" alt="Siam Commercial Bank Logo" />
+    </div>
+    
+    <div class="bank">
+      <h1>Siam Commercial Bank</h1>
+    </div>
+    
+    <div class="account" aria-live="polite">
+      <div class="meta">
+        <div class="owner">Account Number</div>
+        <div class="number" id="account-number">745 259 0514</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+        <button class="btn" id="copy-btn" aria-label="Copy Account Number">
+          <span class="copy-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M16 4H8a2 2 0 00-2 2v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+              <rect x="10" y="6" width="8" height="12" rx="2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></rect>
+            </svg>
+            Copy
+          </span>
+        </button>
+        <div class="small">Name: <strong>SANG LUNGMON</strong></div>
+      </div>
+    </div>
+
+    <p class="small">ငွေလွှဲမှုအောင်မြင်တိုင်း စလစ်ကိုပို့ပြီး အကြောင်းကြားပါ ကျေးဇူးတင်ပါတယ်🙏</p>
+  </div>
+  
+  <div id="toast" class="toast" role="status" aria-live="polite">Copied!</div>
+  
+  <script>
+    // Snow effect
+    function createSnowflake() {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      
+      // Use different snowflake characters for variety
+      const snowChars = ['❄', '❅', '❆', '•'];
+      const randomChar = snowChars[Math.floor(Math.random() * snowChars.length)];
+      snowflake.innerHTML = randomChar;
+      
+      // Random properties for each snowflake
+      const size = Math.random() * 16 + 8; // 8px to 24px
+      const startPosition = Math.random() * 100; // 0% to 100%
+      const animationDuration = Math.random() * 10 + 10; // 10s to 20s
+      const animationDelay = Math.random() * 5; // 0s to 5s
+      const opacity = Math.random() * 0.7 + 0.3; // 0.3 to 1.0
+      
+      snowflake.style.left = `${startPosition}%`;
+      snowflake.style.fontSize = `${size}px`;
+      snowflake.style.animationDuration = `${animationDuration}s`;
+      snowflake.style.animationDelay = `${animationDelay}s`;
+      snowflake.style.opacity = opacity;
+      
+      // Add slight horizontal movement variation
+      const horizontalMove = Math.random() * 40 - 20; // -20px to 20px
+      snowflake.style.setProperty('--move-x', `${horizontalMove}px`);
+      
+      document.getElementById('snow-container').appendChild(snowflake);
+      
+      // Remove snowflake after animation completes
+      setTimeout(() => {
+        if (snowflake.parentNode) {
+          snowflake.remove();
+        }
+      }, (animationDuration + animationDelay) * 1000);
+    }
+    
+    // Create snowflakes continuously
+    function startSnowfall() {
+      // Create initial batch of snowflakes
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => createSnowflake(), i * 100);
+      }
+      
+      // Continue creating snowflakes
+      setInterval(createSnowflake, 200);
+    }
+    
+    // Start snowfall when page loads
+    window.addEventListener('load', startSnowfall);
+    
+    // Copy account number functionality
+    const copyBtn = document.getElementById('copy-btn');
+    const account = document.getElementById('account-number').innerText.trim();
+    const toast = document.getElementById('toast');
+
+    async function showToast(text='Copied!'){
+      toast.textContent = text;
+      toast.style.display = 'block';
+      setTimeout(()=>{toast.style.display='none'},2000);
+    }
+
+    copyBtn.addEventListener('click', async ()=>{
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          await navigator.clipboard.writeText(account);
+        } else {
+          // fallback
+          const ta = document.createElement('textarea');
+          ta.value = account;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+        }
+        showToast('Account number copied');
+      }catch(err){
+        console.error(err);
+        showToast('Unable to copy — Please try again');
+      }
+    });
+  </script>
+</body>
+</html>
